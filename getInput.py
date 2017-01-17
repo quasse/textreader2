@@ -1,31 +1,6 @@
 import nltk
 import re
-
-class Word():
-    def __init__(self, word, wordID, sentenceID, graphID):
-        self.word = word[0]
-        self.type = word[1]
-        self.number = 1
-        self.ids = [0,0,0]
-        self.ids[0] = wordID
-        self.ids[1] = sentenceID
-        self.ids[2] = graphID
-
-    def getWord(self):
-        return self.word
-
-    def getType(self):
-        return self.type
-
-    def getWordID(self):
-        return self.ids[0]
-
-    def getSentenceID(self):
-        return self.ids[1]
-
-    def getGraphID(self):
-        return self.ids[2]
-
+import units
 
 def splitSents(graph):
     # This code is copied from http://stackoverflow.com/questions/4576077/python-split-text-on-sentences
@@ -41,6 +16,7 @@ def splitSents(graph):
     text = re.sub(prefixes, "\\1<prd>", text)
     text = re.sub(websites, "<prd>\\1", text)
     if "Ph.D" in text: text = text.replace("Ph.D.", "Ph<prd>D<prd>")
+    # I added a.m. and p.m.
     if "a.m." in text: text = text.replace("a.m.", "a<prd>m<prd>")
     if "p.m." in text: text = text.replace("p.m.", "p<prd>m<prd>")
     if "..." in text: text = text.replace("...", "<prd><prd><prd>")
@@ -65,8 +41,8 @@ def splitSents(graph):
 
 
 if __name__=="__main__":
+    index = units.Index()
     wordNum = sentNum = graphNum = 0
-    wordList = []
     #Opens file to be read and creates variable of text
     text = open('texts/test_story.txt', 'r').read()
 
@@ -76,13 +52,14 @@ if __name__=="__main__":
     for x in graphs:
         if x != "":
             sentences = splitSents(x)
-            print x
         for y in sentences:
             tokens = nltk.word_tokenize(y)
             tagged = nltk.pos_tag(tokens)
             for z in tagged:
-                newWord = Word(z, wordNum, sentNum, graphNum)
-                wordList.append(newWord)
+                newWord = units.Word(z, wordNum, sentNum, graphNum)
+                index.addWord(newWord, wordNum, sentNum, graphNum)
                 wordNum += 1
             sentNum += 1
         graphNum += 1
+
+    index.printText()
