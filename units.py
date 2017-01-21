@@ -35,13 +35,21 @@ class Index():
         self.wordList = []
 
     def addWord(self, word, wordID, sentID, graphID):
-        self.wordList.append(word)
+        print "adding word"
+        self.wordList.append(word.getWord())
         if word.getWord() in self.dict:
             self.dict[word.getWord()].addIndexes(wordID, sentID, graphID)
         else:
+            print word.getWord()
             self.dict[word.getWord()] = word
 
     def printText(self):
+        print "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
         for x in self.wordList:
-            print x.getWord()
-            print x.getWordIDs()
+            print x
+            print self.dict[x].getWordIDs()
+
+        print "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
+        for y in self.dict:
+            print y
+            print self.dict[y].getWordIDs()
